@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>System Warning</title>
+<hta:application 
+    id="oHTA"
+    applicationname="MagneticButton"
+    border="dialog"
+    caption="yes"
+    maximizebutton="no"
+    minimizebutton="no"
+    scroll="no"
+    showintaskbar="yes"
+    singleinstance="yes"
+    sysmenu="yes">
+
+<style>
+    body {
+        background-color: #F1EFEA; /* Classic Windows XP Luna palette */
+        font-family: "Tahoma", sans-serif;
+        font-size: 8pt;
+        margin: 0px;
+        overflow: hidden;
+    }
+    #errorText {
+        position: absolute;
+        top: 25px;
+        left: 60px;
+        width: 230px;
+    }
+    #errorIcon {
+        position: absolute;
+        top: 20px;
+        left: 15px;
+        width: 32px;
+        height: 32px;
+    }
+    #btnOK {
+        position: absolute;
+        top: 70px;
+        left: 120px;
+        width: 75px;
+        height: 23px;
+        font-family: "Tahoma", sans-serif;
+        font-size: 8pt;
+    }
+</style>
+
+<script language="VBScript">
+   
+    Dim btnX, btnY, targetX, targetY, isMoving
+    isMoving = False
+
+    Sub Window_OnLoad
+    
+        window.resizeTo 320, 150
+        window.moveTo (screen.width - 320) / 2, (screen.height - 150) / 2
+        
+     
+        btnX = 120
+        btnY = 70
+        targetX = btnX
+        targetY = btnY
+    End Sub
+
+    Sub TrackMouse
+        Dim mouseX, mouseY, btnCenterX, btnCenterY, distGrid
+        
+     
+        mouseX = window.event.clientX
+        mouseY = window.event.clientY
+
+        btnCenterX = btnX + 37
+        btnCenterY = btnY + 11
+        
+       
+        Dim deltaX, deltaY
+        deltaX = btnCenterX - mouseX
+        deltaY = btnCenterY - mouseY
+        
+    
+        If (Abs(deltaX) < 60) And (Abs(deltaY) < 45) Then
+            If Not isMoving Then
+                PickNewCoordinates
+            End If
+        End If
+    End Sub
+
+   
+    Sub PickNewCoordinates
+        Randomize
+        ' Bound choices within the 320x150 window area safely
+        targetX = Int((220 * Rnd) + 1)
+        targetY = Int((85 * Rnd) + 1)
+        
+        isMoving = True
+        GlideButton
+    End Sub
+
+ 
+    Sub GlideButton
+        Dim distX, distY, stepX, stepY
+        Dim objBtn
+        Set objBtn = document.getElementById("btnOK")
+        
+        distX = targetX - btnX
+        distY = targetY - btnY
+        
+       
+        If Abs(distX) < 2 And Abs(distY) < 2 Then
+            btnX = targetX
+            btnY = targetY
+            objBtn.style.left = btnX & "px"
+            objBtn.style.top = btnY & "px"
+            isMoving = False
+            Exit Sub
+        End If
+        
+
+        stepX = distX / 4
+        stepY = distY / 4
+        
+        btnX = btnX + stepX
+        btnY = btnY + stepY
+        
+        objBtn.style.left = CInt(btnX) & "px"
+        objBtn.style.top = CInt(btnY) & "px"
+        
+       
+        window.setTimeout "GlideButton", 15, "VBScript"
+    End Sub
+</script>
+</head>
+
+
+<body onmousemove="TrackMouse">
+    <img id="errorIcon" src="res://user32.dll/2/110" alt="Warning">
+    <div id="errorText">Action required. Please click OK to acknowledge the system patch.</div>
+    
+    <input type="button" id="btnOK" value="OK">
+</body>
+</html>
