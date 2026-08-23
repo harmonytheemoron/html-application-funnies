@@ -31,24 +31,24 @@
 </style>
 
 <script language="VBScript">
-    ' Global variables to track target positions and animation state
+   
     Dim targetX, targetY, currentX, currentY, isMoving
     isMoving = False
 
     Sub Window_OnLoad
-        ' Setup window size and center it initially
+       
         window.resizeTo 300, 140
         currentX = (screen.width - 300) / 2
         currentY = (screen.height - 140) / 2
         window.moveTo currentX, currentY
     End Sub
 
-    ' Triggers continuously whenever the mouse moves over the window body
+ 
     Sub HandleMouseMove
-        ' If it's already in motion, don't interrupt the current slide
+      
         If isMoving Then Exit Sub
         
-        ' Pick a random new coordinate on the desktop screen
+        
         Randomize
         targetX = Int(((screen.width - 320) * Rnd) + 1)
         targetY = Int(((screen.height - 160) * Rnd) + 1)
@@ -57,16 +57,16 @@
         SmoothSlide
     End Sub
 
-    ' The animation loop that glides the window pixel-by-pixel
+  
     Sub SmoothSlide
         Dim stepX, stepY, distX, distY, speed
         speed = 15 ' Higher number = faster movement
         
-        ' Calculate how far away the target is
+    
         distX = targetX - currentX
         distY = targetY - currentY
         
-        ' If the window is close enough to the target, stop moving
+     
         If Abs(distX) < speed And Abs(distY) < speed Then
             currentX = targetX
             currentY = targetY
@@ -75,24 +75,24 @@
             Exit Sub
         End If
         
-        ' Calculate the small step size for this frame
+      
         stepX = distX / 6
         stepY = distY / 6
         
-        ' Update the current positions
+        
         currentX = currentX + stepX
         currentY = currentY + stepY
         
-        ' Instantly move the window to the tiny step position
+       
         window.moveTo currentX, currentY
         
-        ' Call this exact function again in 10 milliseconds to create the smooth frame rate
+       
         window.setTimeout "SmoothSlide", 10, "VBScript"
     End Sub
 </script>
 </head>
 
-<!-- Triggers the runaway sequence the moment the pointer rolls over the window background -->
+
 <body onmousemove="HandleMouseMove">
     <div id="errorText">Updating system configuration... Please wait.</div>
 </body>
