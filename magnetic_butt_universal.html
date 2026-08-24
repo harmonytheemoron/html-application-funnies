@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>System Warning</title>
+<style>
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #F1EFEA;
+}
+body {
+    font-family: Tahoma, sans-serif;
+    font-size: 8pt;
+}
+#window {
+    position: relative;
+    width: 320px;
+    height: 150px;
+    margin: 0 auto;
+}
+#errorText {
+    position: absolute;
+    top: 25px;
+    left: 60px;
+    width: 230px;
+}
+#errorIcon {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 32px;
+    height: 32px;
+    font-size: 30px;
+    line-height: 32px;
+}
+#btnOK {
+    position: absolute;
+    top: 70px;
+    left: 120px;
+    width: 75px;
+    height: 23px;
+    font-family: Tahoma, sans-serif;
+    font-size: 8pt;
+}
+</style>
+</head>
+<body>
+<div id="window">
+    <div id="errorIcon" aria-hidden="true">⚠</div>
+    <div id="errorText">Action required. Please click OK to acknowledge the system patch.</div>
+    <input type="button" id="btnOK" value="OK">
+</div>
+
+<script>
+(() => {
+    const btn = document.getElementById("btnOK");
+
+    let btnX = 120;
+    let btnY = 70;
+    let targetX = btnX;
+    let targetY = btnY;
+    let isMoving = false;
+
+    function setButtonPosition() {
+        btn.style.left = Math.round(btnX) + "px";
+        btn.style.top = Math.round(btnY) + "px";
+    }
+
+    function pickNewCoordinates() {
+        targetX = Math.floor(Math.random() * 220) + 1;
+        targetY = Math.floor(Math.random() * 85) + 1;
+
+        isMoving = true;
+        glideButton();
+    }
+
+    function glideButton() {
+        const distX = targetX - btnX;
+        const distY = targetY - btnY;
+
+        if (Math.abs(distX) < 2 && Math.abs(distY) < 2) {
+            btnX = targetX;
+            btnY = targetY;
+            setButtonPosition();
+            isMoving = false;
+            return;
+        }
+
+        btnX += distX / 4;
+        btnY += distY / 4;
+        setButtonPosition();
+
+        setTimeout(glideButton, 15);
+    }
+
+    document.addEventListener("mousemove", (event) => {
+        const rect = document.getElementById("window").getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const btnCenterX = btnX + 37;
+        const btnCenterY = btnY + 11;
+
+        const deltaX = btnCenterX - mouseX;
+        const deltaY = btnCenterY - mouseY;
+
+        if (Math.abs(deltaX) < 60 && Math.abs(deltaY) < 45) {
+            if (!isMoving) {
+                pickNewCoordinates();
+            }
+        }
+    });
+
+    setButtonPosition();
+})();
+</script>
+</body>
+</html>
